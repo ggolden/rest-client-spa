@@ -12,22 +12,28 @@ This sample shows how a webapp can get data from a REST API on a server.  It use
 
 and connects to Nutshell's sample REST API.
 
-## To Run
+### To Run
 
-Under ideal circumstances, this would run in any browser.  But...
+1. Download the client.html file from GitHub to your local computer.
+2. Open the downloaded client.html in a browser that is not blocking CORS (see below), such as Safari on OSX
 
-Browsers implement security, and for the most part block any attempt to access REST APIs on servers that are not in the same domain as the source of the web page.
-Usually, this works out fine, since usually, the web page(s) and server API(s) would be in the same domain.  But in this case, the web page is either local or being served right from
-GitHub, and the API is on Nutshell's domain.
+### Tricky Bits
+
+#### [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
+
+Under ideal circumstances, this would run in any browser.  But browsers have security, and for the most part block any attempt to access REST APIs on servers that are not in the same domain as the source of the web page.  Usually, our web page(s) and server API(s) are in the same domain, so this is not a problem.  But for this sample, the web page is local, and the API is on Nutshell's domain.
 
 Most browsers will generate a CORS exception and block the server call.  For example, running in Firefox:
 
 `Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at http://join.nutshell.com/people/1. (Reason: CORS header ‘Access-Control-Allow-Origin’ missing).  (unknown)`
 
-It turns out that Safari on OSX runs this, not caring about CORS in this case.
+Safari on OSX will allow cross-origin REST calls, if the .html file is run from the local file system.
 
-## Tricky Bits
+Nutshell could make this a bit easier to use if they added a header to the response from the REST API:
 
+`Access-Control-Allow-Origin: *`
+
+Although this solution may require fielding not only GET but OPTION requests on the server.
 
 #### Dates
 
@@ -37,8 +43,6 @@ We need to parse these into Javascript Date objects, then do proper sort by the 
 
 #### Code Structure
 
-For a commercial product, I would usually use separate files for the HTML, CSS, and a few for the Javascript.
-I would also serve any third party dependencies (Angular, Moment, Bootstrap) from copies on our servers, so we are not dependent on the availability and performance of
-a content delivery network (CDN) for our product.
+For a commercial product, I would usually use separate files for the HTML, CSS, and a few for the Javascript.  I would also serve any third party dependencies (Angular, Moment, Bootstrap) from copies on our servers, so we are not dependent on the availability and performance of a content delivery network (CDN) for our product.
 
 For this sample, it's all in a single file, and we reference our dependencies from public CDNs.
